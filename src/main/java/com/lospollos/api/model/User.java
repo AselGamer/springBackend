@@ -1,5 +1,7 @@
 package com.lospollos.api.model;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +13,7 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "firstname", length = 100, nullable = false)
@@ -21,6 +23,7 @@ public class User {
     private String lastname;
 
     @Column(name = "is_teacher", length = 100, nullable = false)
+    @ColumnDefault("false")
     private boolean is_teacher;
 
     @Column(name = "password", length = 100, nullable = false)
@@ -28,11 +31,9 @@ public class User {
 
     public User() {}
 
-    public User(long id, String firstname, String lastname, boolean is_teacher, String password) {
-        this.id = id;
+    public User(String firstname, String lastname, String password) {
         this.firstname = firstname;
         this.lastname = lastname;
-        this.is_teacher = is_teacher;
         this.password = password;
     }
 
