@@ -8,12 +8,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lospollos.api.exceptions.RestFailureException;
 import com.lospollos.api.model.User;
 import com.lospollos.api.repository.UserRepository;
 
 @RestController
 @RequestMapping(path = "/api/users")
-public class UsersController {
+public class UserController {
     @Autowired
     private UserRepository userRepository;
 
@@ -25,6 +26,6 @@ public class UsersController {
     @GetMapping(path = "/{id}")
     public User getUserById(@PathVariable int id) {
         return userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Error usuario no encontrado"));
+            .orElseThrow(() -> new RestFailureException("Error usuario no encontrado"));
     }
 }
