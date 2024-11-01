@@ -1,6 +1,9 @@
 package com.lospollos.api.model;
 
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,6 +30,9 @@ public class Enrollment {
     @ManyToOne
     @JoinColumn(name="course_id", referencedColumnName = "id", nullable = false)
 	private Course course;
+
+    @OneToMany(mappedBy = "enrollment")
+    private List<Absence> absences;
 
     @Column(name = "grade", nullable = true)
 	private int grade;
@@ -62,6 +69,16 @@ public class Enrollment {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    @JsonIgnore
+    public List<Absence> getAbsences() {
+        return absences;
+    }
+
+    @JsonIgnore
+    public void setAbsences(List<Absence> absences) {
+        this.absences = absences;
     }
 
     public int getGrade() {

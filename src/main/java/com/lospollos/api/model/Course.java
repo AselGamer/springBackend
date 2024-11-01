@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -101,10 +102,12 @@ public class Course {
         this.end_date = end_date;
     }
 
+    @JsonIgnore
     public List<Enrollment> getEnrollments() {
         return enrollments;
     }
 
+    @JsonIgnore
     public void setEnrollments(List<Enrollment> enrollments) {
         this.enrollments = enrollments;
     }
