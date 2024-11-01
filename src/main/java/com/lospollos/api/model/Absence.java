@@ -4,6 +4,7 @@ import java.util.Date;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,6 +51,13 @@ public class Absence {
     }
 
     public void setEnrollment(Enrollment enrollment) {
+        this.enrollment = enrollment;
+    }
+
+    @JsonSetter("enrollment_id")
+    public void setEnrollmentById(int enrollmentId) {
+        Enrollment enrollment = new Enrollment();
+        enrollment.setId(enrollmentId);
         this.enrollment = enrollment;
     }
 

@@ -1,27 +1,27 @@
 package com.lospollos.api.model;
 
 import java.util.Date;
-import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "courses")
-public class Course {
+@Table(name = "assignments")
+public class Assignment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
     @Column(name = "name", length = 100, nullable = false)
     private String name;
@@ -29,8 +29,8 @@ public class Course {
     @Column(name = "description", length = 100, nullable = false)
     private String description;
 
-    @Column(name = "duration", length = 100, nullable = false)
-    private String duration;
+    @Column(name = "hidden", nullable = false)
+    private boolean hidden = true;
 
     @Column(name = "start_date", nullable = false)
     @ColumnDefault("CURRENT_DATE")
@@ -41,19 +41,17 @@ public class Course {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date end_date;
 
-    @OneToMany(mappedBy = "course")
-    private List<Enrollment> enrollments;
+    @ManyToOne
+    @JoinColumn(name="course_id", referencedColumnName = "id", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+    private Course course;
 
-    @OneToMany(mappedBy = "course")
-    private List<Assignment> assignments;
+    public Assignment() {}
 
-    public Course() {}
-
-    public Course(String name, String description, String duration, Date start_date, Date end_date) {
+    public Assignment(String name, String description, boolean hidden, Date end_date) {
         this.name = name;
         this.description = description;
-        this.duration = duration;
-        this.start_date = start_date;
+        this.hidden = hidden;
         this.end_date = end_date;
     }
 
@@ -81,12 +79,12 @@ public class Course {
         this.description = description;
     }
 
-    public String getDuration() {
-        return duration;
+    public boolean isHidden() {
+        return hidden;
     }
 
-    public void setDuration(String duration) {
-        this.duration = duration;
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public Date getStartDate() {
@@ -105,32 +103,25 @@ public class Course {
         this.end_date = end_date;
     }
 
-    @JsonIgnore
-    public List<Enrollment> getEnrollments() {
-        return enrollments;
+    public Course getCourse() {
+        return course;
     }
 
-    @JsonIgnore
-    public void setEnrollments(List<Enrollment> enrollments) {
-        this.enrollments = enrollments;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
-    @JsonIgnore
-    public List<Assignment> getAssignments() {
-        return assignments;
-    }
-
-    @JsonIgnore
-    public void setAssignments(List<Assignment> assignments) {
-        this.assignments = assignments;
+    @JsonSetter("course_id")
+    public void setCourseById(Long courseId) {
+        Course course = new Course();
+        course.setId(courseId);
+        this.course = course;
     }
 
     public String toString() {
-        return 
-        this.name + " " +
-        this.description + " " +
-        this.duration + " " +
-        this.start_date + " " +
-        this.end_date;
+        return name + 
+        " " + description + 
+        " " + end_date.toString() + 
+        " " + start_date.toString();
     }
 }

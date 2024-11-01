@@ -3,7 +3,9 @@ package com.lospollos.api.model;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,6 +40,7 @@ public class Enrollment {
 	private int grade;
 
     @Column(name = "grade_date", nullable = true)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date grade_date;
 
 	public Enrollment() {}
@@ -63,11 +66,25 @@ public class Enrollment {
         this.user = user;
     }
 
+    @JsonSetter("user_id")
+    public void setUserById(Long userId) {
+        User user = new User();
+        user.setId(userId);
+        this.user = user;
+    }
+
     public Course getCourse() {
         return course;
     }
 
     public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    @JsonSetter("course_id")
+    public void setCourseById(Long courseId) {
+        Course course = new Course();
+        course.setId(courseId);
         this.course = course;
     }
 
