@@ -2,7 +2,11 @@ package com.lospollos.api.controller;
 import com.lospollos.api.model.User;
 import com.lospollos.api.repository.UserRepository;
 import com.lospollos.api.security.JwtUtil;
+import com.lospollos.api.service.ResponseService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +25,7 @@ public class AuthController {
     @Autowired
     JwtUtil jwtUtils;
     @PostMapping("/signin")
-    public String authenticateUser(@RequestBody User user) {
+    public ResponseEntity<String> authenticateUser(@RequestBody User user) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getFirstname(),
@@ -29,12 +33,12 @@ public class AuthController {
                 )
         );
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return jwtUtils.generateToken(userDetails.getUsername());
+        return ResponseService.toJsonResponse(jwtUtils.generateToken(userDetails.getUsername()), "token", HttpStatus.OK);
     }
     @PostMapping("/signup")
-    public String registerUser(@RequestBody User user) {
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
         if (userRepository.existsByFirstname(user.getFirstname())) {
-            return "Error: Username is already taken!";
+            return ResponseService.toJsonResponse("Username is already taken!", "error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         // Create new user's account
         User newUser = new User(
@@ -43,6 +47,6 @@ public class AuthController {
                 encoder.encode(user.getPassword())
         );
         userRepository.save(newUser);
-        return "User registered successfully!";
+        return ResponseService.toJsonResponse("User registered successfully!", "error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

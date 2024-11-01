@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lospollos.api.exceptions.RestFailureException;
+import com.lospollos.api.exception.RestFailureException;
 import com.lospollos.api.model.User;
 import com.lospollos.api.repository.UserRepository;
 

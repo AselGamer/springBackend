@@ -1,4 +1,4 @@
-package com.lospollos.api.exceptions;
+package com.lospollos.api.exception;
 
 public class RestFailureException extends RuntimeException {
     

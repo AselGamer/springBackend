@@ -1,6 +1,7 @@
 package com.lospollos.api.model;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -11,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -37,6 +39,9 @@ public class Course {
     @Column(name = "end_date", nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date end_date;
+
+    @OneToMany(mappedBy = "course")
+    private List<Enrollment> enrollments;
 
     public Course() {}
 
@@ -94,6 +99,14 @@ public class Course {
 
     public void setEndDate(Date end_date) {
         this.end_date = end_date;
+    }
+
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
+    }
+
+    public void setEnrollments(List<Enrollment> enrollments) {
+        this.enrollments = enrollments;
     }
 
     public String toString() {
