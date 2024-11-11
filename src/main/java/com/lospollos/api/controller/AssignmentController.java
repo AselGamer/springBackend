@@ -9,14 +9,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lospollos.api.dto.AssignmentDetailDto;
 import com.lospollos.api.exception.RestFailureException;
 import com.lospollos.api.model.Assignment;
 import com.lospollos.api.model.Submission;
+import com.lospollos.api.model.User;
 import com.lospollos.api.repository.AssignmentRespository;
 import com.lospollos.api.repository.SubmissionRepository;
+import com.lospollos.api.repository.UserRepository;
+import com.lospollos.api.security.JwtUtil;
+import com.lospollos.api.service.AssignmentService;
 import com.lospollos.api.service.ResponseService;
 
 @RestController
@@ -26,14 +32,29 @@ public class AssignmentController {
     private AssignmentRespository assignmentRespository;
     @Autowired
     private SubmissionRepository submissionRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AssignmentService assignmentService;
+    
+    
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @GetMapping(path = "/all")
     public List<Assignment> getAllUsers() {
         return assignmentRespository.findAll();
     }
 
+    @GetMapping(path = "/course/{id}")
+    public List<Assignment> getByCourseId(@PathVariable int id) {
+        return assignmentRespository.findByCourseNotHidden(id)
+                .orElseThrow(() -> new RestFailureException("Error tareas no encontrada"));
+    }
+
     @GetMapping(path = "/{id}")
-    public Assignment getUserById(@PathVariable int id) {
+    public Assignment getAssignmentById(@PathVariable int id) {
         return assignmentRespository.findById(id)
                 .orElseThrow(() -> new RestFailureException("Error tarea no encontrada"));
     }
@@ -56,6 +77,14 @@ public class AssignmentController {
         } catch (Exception e) {
             return ResponseService.toJsonResponse(e.getMessage(), "error", HttpStatus.OK);
         }
+    }
+
+    @GetMapping(path = "/user/submissions/{id}")
+    public AssignmentDetailDto getAssignmentDetail(@PathVariable int id, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
+        User user = userRepository.findByEmail(jwtUtil.getEmailFromToken(token));
+        return assignmentService.convertToDTO(assignmentRespository.findOneWithSubmission(id, (int) user.getId())
+        .orElseThrow(() -> new RestFailureException("Error tarea o entrega no encontrada")));
     }
 
     @GetMapping(path = "/submissions/{assignment_id}")

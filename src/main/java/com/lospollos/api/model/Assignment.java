@@ -1,10 +1,12 @@
 package com.lospollos.api.model;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 import jakarta.persistence.Column;
@@ -14,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -44,7 +47,11 @@ public class Assignment {
     @ManyToOne
     @JoinColumn(name="course_id", referencedColumnName = "id", nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+    @JsonIgnore
     private Course course;
+
+    @OneToMany(mappedBy = "assignment")
+    private List<Submission> submissions;
 
     public Assignment() {}
 
@@ -87,6 +94,7 @@ public class Assignment {
         this.hidden = hidden;
     }
 
+    @JsonIgnore
     public Date getStartDate() {
         return start_date;
     }
@@ -95,6 +103,7 @@ public class Assignment {
         this.start_date = start_date;
     }
 
+    @JsonIgnore
     public Date getEndDate() {
         return end_date;
     }
@@ -103,12 +112,18 @@ public class Assignment {
         this.end_date = end_date;
     }
 
+    @JsonIgnore
     public Course getCourse() {
         return course;
     }
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    @JsonIgnore
+    public List<Submission> getSubmissions() {
+        return submissions;
     }
 
     @JsonSetter("course_id")
