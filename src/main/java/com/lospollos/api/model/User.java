@@ -21,6 +21,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "email", length = 100, nullable = false)
+    private String email;
+
     @Column(name = "firstname", length = 100, nullable = false)
     private String firstname;
 
@@ -39,7 +42,8 @@ public class User {
 
     public User() {}
 
-    public User(String firstname, String lastname, String password) {
+    public User(String email, String firstname, String lastname, String password) {
+        this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
@@ -51,6 +55,14 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirstname() {
@@ -89,7 +101,7 @@ public class User {
     public List<Enrollment> getEnrollments() {
         return enrollments;
     }
-    
+
     @JsonIgnore
     public void setEnrollments(List<Enrollment> enrollments) {
         this.enrollments = enrollments;

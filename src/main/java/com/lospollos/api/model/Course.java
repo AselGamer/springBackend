@@ -89,6 +89,7 @@ public class Course {
         this.duration = duration;
     }
 
+	@JsonIgnore
     public Date getStartDate() {
         return start_date;
     }
@@ -97,6 +98,7 @@ public class Course {
         this.start_date = start_date;
     }
 
+	@JsonIgnore
     public Date getEndDate() {
         return end_date;
     }

@@ -32,7 +32,7 @@ public class JwtUtil {
                 .compact();
     }
     // Get username from JWT token
-    public String getUsernameFromToken(String token) {
+    public String getEmailFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key).build()
                 .parseClaimsJws(token)

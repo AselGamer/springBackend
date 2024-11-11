@@ -28,7 +28,7 @@ public class AuthController {
     public ResponseEntity<String> authenticateUser(@RequestBody User user) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        user.getFirstname(),
+                        user.getEmail(),
                         user.getPassword()
                 )
         );
@@ -37,11 +37,12 @@ public class AuthController {
     }
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
-        if (userRepository.existsByFirstname(user.getFirstname())) {
-            return ResponseService.toJsonResponse("Username is already taken!", "error", HttpStatus.INTERNAL_SERVER_ERROR);
+        if (userRepository.existsByEmail(user.getEmail())) {
+            return ResponseService.toJsonResponse("Email is already taken!", "error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         // Create new user's account
         User newUser = new User(
+                user.getEmail(),
                 user.getFirstname(),
                 user.getLastname(),
                 encoder.encode(user.getPassword())

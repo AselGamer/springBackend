@@ -7,6 +7,8 @@ import com.lospollos.api.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+    User findByEmail(String email);
+    boolean existsByEmail(String email);
     User findByFirstname(String firstname);
     boolean existsByFirstname(String firstname);
 }
