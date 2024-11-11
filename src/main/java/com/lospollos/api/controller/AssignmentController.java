@@ -70,7 +70,7 @@ public class AssignmentController {
     }
 
     @PostMapping(path = "/submissions/add")
-    public ResponseEntity<String> addAssignmnent(@RequestBody Submission submission) {
+    public ResponseEntity<String> addAssignmnentSubmission(@RequestBody Submission submission) {
         try {
             submissionRepository.save(submission);
             return ResponseService.toJsonResponse("Entrega guardada correctamente", HttpStatus.OK);

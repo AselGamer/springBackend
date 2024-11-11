@@ -26,10 +26,12 @@ public class Submission {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "assignment_id", referencedColumnName = "id", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
     private Assignment assignment;
 
     @Column(name = "send_date", nullable = false)
