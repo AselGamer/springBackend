@@ -4,6 +4,7 @@ import java.util.Date;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 import jakarta.persistence.Column;
@@ -46,6 +47,7 @@ public class Absence {
         this.id = id;
     }
 
+    @JsonIgnore
     public Enrollment getEnrollment() {
         return enrollment;
     }

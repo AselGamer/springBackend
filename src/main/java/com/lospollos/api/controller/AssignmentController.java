@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lospollos.api.dto.AssignmentDetailDto;
+import com.lospollos.api.dto.GradeDto;
 import com.lospollos.api.exception.RestFailureException;
 import com.lospollos.api.model.Assignment;
 import com.lospollos.api.model.Submission;
@@ -70,10 +71,27 @@ public class AssignmentController {
     }
 
     @PostMapping(path = "/submissions/add")
-    public ResponseEntity<String> addAssignmnentSubmission(@RequestBody Submission submission) {
+    public ResponseEntity<String> addAssignmnentSubmission(@RequestBody Submission submission, @RequestHeader("Authorization") String authorizationHeader) {
         try {
+            String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
+            User user = userRepository.findByEmail(jwtUtil.getEmailFromToken(token));
+            submission.setUser(user);
             submissionRepository.save(submission);
             return ResponseService.toJsonResponse("Entrega guardada correctamente", HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseService.toJsonResponse(e.getMessage(), "error", HttpStatus.OK);
+        }
+    }
+
+    @PostMapping(path = "/submissions/grade/{id}")
+    public ResponseEntity<String> gradeSubmission(@PathVariable int id, @RequestBody GradeDto gradeDto) {
+        try {
+            Submission submission = submissionRepository.findById(id)
+                .orElseThrow(() -> new RestFailureException("Error entrega no encontrada"));
+            submission.setGrade(gradeDto.getGrade());
+            submission.setGradedDate(gradeDto.getGradedDate());
+            submissionRepository.save(submission);
+            return ResponseService.toJsonResponse("Nota guardada correctamente", HttpStatus.OK);
         } catch (Exception e) {
             return ResponseService.toJsonResponse(e.getMessage(), "error", HttpStatus.OK);
         }
@@ -85,6 +103,14 @@ public class AssignmentController {
         User user = userRepository.findByEmail(jwtUtil.getEmailFromToken(token));
         return assignmentService.convertToDTO(assignmentRespository.findOneWithSubmission(id, (int) user.getId())
         .orElseThrow(() -> new RestFailureException("Error tarea o entrega no encontrada")));
+    }
+
+    @GetMapping(path = "/user/submissions")
+    public List<Assignment> getSubmitted(@RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
+        User user = userRepository.findByEmail(jwtUtil.getEmailFromToken(token));
+        return assignmentRespository.findBySubmitted((int) user.getId())
+        .orElseThrow(() -> new RestFailureException("Error tarea o entrega no encontrada"));
     }
 
     @GetMapping(path = "/submissions/{assignment_id}")

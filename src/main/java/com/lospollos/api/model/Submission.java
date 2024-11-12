@@ -27,11 +27,13 @@ public class Submission {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+    @JsonIgnore
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "assignment_id", referencedColumnName = "id", nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+    @JsonIgnore
     private Assignment assignment;
 
     @Column(name = "send_date", nullable = false)
@@ -40,7 +42,8 @@ public class Submission {
     private Date send_date = new Date();
 
     @Column(name = "grade", nullable = true)
-    private int grade;
+    @ColumnDefault("null")
+    private Integer grade;
 
     @Column(name = "graded_date", nullable = true)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

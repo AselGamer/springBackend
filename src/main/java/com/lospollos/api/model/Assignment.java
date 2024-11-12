@@ -47,6 +47,7 @@ public class Assignment {
     @ManyToOne
     @JoinColumn(name="course_id", referencedColumnName = "id", nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
+    @JsonIgnore
     private Course course;
 
     @OneToMany(mappedBy = "assignment")

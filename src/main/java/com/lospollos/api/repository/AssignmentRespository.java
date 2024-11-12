@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.lospollos.api.dto.AssignmentDetailDto;
 import com.lospollos.api.model.Assignment;
 
 @Repository
@@ -21,8 +20,12 @@ public interface AssignmentRespository extends JpaRepository<Assignment, Integer
            "WHERE a.course.id = :course_id")
     Optional<List<Assignment>> findByCourse(@Param("course_id") int course_id);
     @Query("SELECT a FROM Assignment a " +
-           "JOIN Submission s ON a.id = s.assignment.id " +
+           "LEFT JOIN Submission s ON a.id = s.assignment.id " +
            "WHERE a.id = :id " + 
            "AND s.user.id = :user_id")
     Optional<Assignment> findOneWithSubmission(@Param("id") int id, @Param("user_id") int user_id);
+    @Query("SELECT a FROM Assignment a " +
+           "LEFT JOIN Submission s ON a.id = s.assignment.id " +
+           "WHERE s.user.id = :user_id")
+    Optional<List<Assignment>> findBySubmitted(@Param("user_id") int user_id);
 }

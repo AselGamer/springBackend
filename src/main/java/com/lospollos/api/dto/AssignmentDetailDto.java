@@ -2,6 +2,7 @@ package com.lospollos.api.dto;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lospollos.api.model.Submission;
 
 public class AssignmentDetailDto {
@@ -29,6 +30,7 @@ public class AssignmentDetailDto {
     }
 
     // Getter and Setter for start_date
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     public Date getStartDate() {
         return start_date;
     }
@@ -38,6 +40,7 @@ public class AssignmentDetailDto {
     }
 
     // Getter and Setter for end_date
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     public Date getEndDate() {
         return end_date;
     }
