@@ -1,0 +1,11 @@
+com\lospollos\api\controller\AssignmentController.class
+com\lospollos\api\model\Submission.class
+com\lospollos\api\controller\EnrollmentController.class
+com\lospollos\api\model\Assignment.class
+com\lospollos\api\repository\EnrollmentRepository.class
+com\lospollos\api\exception\RestFailureException.class
+com\lospollos\api\model\Absence.class
+com\lospollos\api\repository\AssignmentRespository.class
+com\lospollos\api\service\ResponseService.class
+com\lospollos\api\repository\SubmissionRepository.class
+com\lospollos\api\repository\AbsenceRepository.class
